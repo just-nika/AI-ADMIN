@@ -12,6 +12,18 @@ import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import ResponsiveDialog from './add-post';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from './firebase'
+import {
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+    useLocation,
+    Navigate,
+    Outlet,
+} from "react-router-dom";
 
 interface FormElements extends HTMLFormControlsCollection {
     email: HTMLInputElement;
@@ -47,6 +59,40 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function AdminLogIn() {
+    let navigate = useNavigate();
+    let location = useLocation();
+
+    let from = location.state?.from?.pathname || "/admin";
+    const login = async (email: string, password: string) => {
+        signInWithEmailAndPassword(auth.auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                navigate(from, { replace: true });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert("Invalid email or password");
+            });
+
+
+        // if (email === process.env.REACT_APP_LOGIN_NAME && password === process.env.REACT_APP_LOGIN_PASSWORD) {
+        //     let formData = new FormData(event.currentTarget);
+        //     let username = formData.get("username") as string;
+        //
+        //     auth.signin(username, () => {
+        //         // Send them back to the page they tried to visit when they were
+        //         // redirected to the login page. Use { replace: true } so we don't create
+        //         // another entry in the history stack for the login page.  This means that
+        //         // when they get to the protected page and click the back button, they
+        //         // won't end up back on the login page, which is also really nice for the
+        //         // user experience.
+        //         navigate(from, { replace: true });
+        //     });
+        // } else {
+        // }
+    };
+
     return (
         <CssVarsProvider defaultMode="light" disableTransitionOnChange>
             <CssBaseline />
@@ -54,7 +100,7 @@ export default function AdminLogIn() {
                 styles={{
                     ':root': {
                         '--Form-maxWidth': '800px',
-                        '--Transition-duration': '0.4s', // set to `none` to disable transition
+                        '--Transition-duration': '0.4s',
                     },
                 }}
             />
@@ -134,21 +180,18 @@ export default function AdminLogIn() {
                                 onSubmit={(event: React.FormEvent<SignInFormElement>) => {
                                     event.preventDefault();
                                     const formElements = event.currentTarget.elements;
-                                    const data = {
-                                        email: formElements.email.value,
-                                        password: formElements.password.value,
-                                        persistent: formElements.persistent.checked,
-                                    };
-                                    alert(JSON.stringify(data, null, 2));
+                                    const email = formElements.email.value;
+                                    const password = formElements.password.value;
+                                    login(email, password);
                                 }}
                             >
                                 <FormControl required>
                                     <FormLabel>Email</FormLabel>
-                                    <Input type="email" name="email" />
+                                    <Input type="email" name="email" id="email" />
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Password</FormLabel>
-                                    <Input type="password" name="password" />
+                                    <Input type="password" name="password" id="password" />
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
