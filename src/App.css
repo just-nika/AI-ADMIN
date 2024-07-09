@@ -57,3 +57,35 @@
   color: #999;
   text-transform: uppercase;
 }
+
+.aiia-logo {
+  width: 150px;
+}
+
+.add-post {
+  width: 90%;
+  margin: auto;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 42px 42px;
+  box-shadow: black 0px 0px 20px 1px;
+}
+
+.footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #f7941d;
+  text-align: center;
+}
+
+.footer .company {
+  margin-top: 0;
+}
+
+.footer .rights {
+  margin-bottom: 0;
+}
+
+.footer p {
+  margin: 0;
+}
